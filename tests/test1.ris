@@ -2,4 +2,4 @@ var a = "Sanjay"
 var b = "Bhadra"
 int c = 5
 bool d = true
-rep var a = "Rajan"
+/ rep var a = "Rajan"
