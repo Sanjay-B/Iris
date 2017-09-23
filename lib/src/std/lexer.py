@@ -120,7 +120,6 @@ def lex(content):
 							tokens['var']['name'][i] = v
 							i = 0
 							is_value = 0
-		'''
 				if a[1] == 'bool' and is_value == 0:
 					if n not in tokens['bool']['name']:
 						print("Bool '"+n+"' does not exist")
@@ -136,7 +135,8 @@ def lex(content):
 							is_value = 0
 				if a[1] is not 'var' and is_value == 0 or a[1] is not 'bool' and is_value == 0:
 					print("Systematic Error: Cannot replace none-type value.")
-					exit()		
+					exit()
+				'''		
 		if 'bool' in line:
 			#print("Found Bool")
 			a = line.strip().split(" ")
