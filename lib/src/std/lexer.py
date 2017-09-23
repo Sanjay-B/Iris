@@ -89,7 +89,7 @@ def lex(content):
 				else:
 					tokens['int']['name'].append(i)
 					tokens['int']['value'].append(v)
-
+		'''
 		# Keyword: rep needs to be fixed
 		if 'rep' in line:
 			#print("Found Rep")
@@ -120,6 +120,7 @@ def lex(content):
 							tokens['var']['name'][i] = v
 							i = 0
 							is_value = 0
+		'''
 				if a[1] == 'bool' and is_value == 0:
 					if n not in tokens['bool']['name']:
 						print("Bool '"+n+"' does not exist")
@@ -158,4 +159,4 @@ def lex(content):
 					exit()
 
 	print(tokens)
-	#return tokens
+	return tokens
