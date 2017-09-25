@@ -42,6 +42,8 @@ class System:
         data += "<EOF>"
         return data
 
+class Systematic:
+
     def vList(_list):
         for v in _list:
             a = v
@@ -50,13 +52,16 @@ class System:
 
     def iList(_list):
         for i in _list:
-            return i
+            b = i
+            yield b
+            del b
 
     def bList(_list):
-        for b in _list:
-            return b
+        for x in _list:
+            c = x
+            yield c
+            del c
 
-class Systematic:
     def vAssign(name,value):
         sym[name] = value
 
@@ -79,3 +84,15 @@ class Systematic:
     def _print(_obj):
         a = str(_obj)
         print(a)
+
+    def vIndex(name,table):
+        i = 0
+        for v in table:
+            i = table.index(name)
+            yield i
+            del i
+
+    def gValue(index,table):
+        d = table[index]
+        yield d
+        del 
