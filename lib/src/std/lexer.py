@@ -29,13 +29,14 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
-from .system import System
+from .system import System, Systematic
 import time
 
 tokens = {
 	"var": {"name":[],"value":[]},
 	"int": {"name":[],"value":[]},
 	"bool": {"name":[],"value":[]},
+	"if_statement": {"syn":[],"value":[]},
 	"ignored": []
 }
 
@@ -74,14 +75,14 @@ Grammer:
 - To replace an int, bool or var
 	- name = new_value
 
+- If Statments(if type-object [operators] do)
+	- 
+
 '''
 
 def lex(content):
 	contents = open(content, "r")
 	lines = contents.readlines()
-	vState = 0
-	iState = 0
-	bState = 0
 	for line in lines:
 		if '/' in line:
 			#print("Found Comment")
@@ -90,9 +91,6 @@ def lex(content):
 			tokens['ignored'].append(c)
 		if 'var' in line:
 			a = line.strip().split(" ")
-			#print(a)
-			#print(a[0])
-			#print(a[1])
 			if not a[0] == '/' and a[1] == 'var':
 				n = a[1]
 				v = a[3:]
@@ -144,7 +142,7 @@ def lex(content):
 						tokens['var']['name'].append(n)
 						tokens['var']['value'].append(v)
 				else:
-					print("2")
+					#print("2")
 					n = a[1]
 					if n in tokens['var']['name']:
 						print("Systematic Error: Cannot create variable object '"+n+"' more than once.")
@@ -153,9 +151,6 @@ def lex(content):
 							_w = type(a[2])
 						except IndexError:
 							_w = None
-						#if _w is not str():
-							#print("Systematic Error: Var-type '"+n+"' must be a string.")
-							#exit()
 						tokens['var']['name'].append(n)
 						tokens['var']['value'].append(_w)
 			elif a[0] == '/' and a[1] == 'var':
@@ -277,9 +272,9 @@ def lex(content):
 					print("Syntax Error: Attemped to create bool object '"+n+"'. Value must be boolean type.")
 					exit()
 		#time.sleep(2)
-		v_Name = System.vList(tokens['var']['name'])
-		i_Name = System.vList(tokens['int']['name'])
-		b_Name = System.vList(tokens['bool']['name'])
+		v_Name = Systematic.vList(tokens['var']['name'])
+		i_Name = Systematic.iList(tokens['int']['name'])
+		b_Name = Systematic.bList(tokens['bool']['name'])
 		vName = None
 		iName = None
 		bName = None
@@ -289,26 +284,13 @@ def lex(content):
 			iName = kci
 		for cik in b_Name:
 			bName = cik
-		#print("V : "+str(vName))
-		#print("I : "+str(iName))
-		#print("B : "+str(bName))
 		if vName is not None:
 			if vName in line:
 				a = line.strip().split(" ")
-				#print("a - 1 = "+str(a))
-				#print("a[0] = "+a[0])
 				if a[0] == 'var':
-					#print("Found ya")
 					pass
 				else:
-					#print("Yes")
-					#print("a - 2 = "+str(a))
-					#print("Test 1:2 "+str(vName)+" == "+a[0])
-					#print("Test 2:2 "+str("=")+" == "+a[1])
 					if a[0] == vName and a[1] == '=':
-						#print("Var toggled")
-						#print("Found iName")
-						#print("a - 3 = "+str(a))
 						n = a[0]
 						v = a[2]
 						i = 0
@@ -330,20 +312,10 @@ def lex(content):
 		if iName is not None:
 			if iName in line:
 				a = line.strip().split(" ")
-				#print("a - 1 = "+str(a))
-				#print("a[0] = "+a[0])
 				if a[0] == 'int':
-					#print("Found ya")
 					pass
 				else:
-					#print("Yes")
-					#print("a - 2 = "+str(a))
-					#print("Test 1:2 "+str(vName)+" == "+a[0])
-					#print("Test 2:2 "+str("=")+" == "+a[1])
 					if a[0] == iName and a[1] == '=':
-						#print("Var toggled")
-						#print("Found iName")
-						#print("a - 3 = "+str(a))
 						n = a[0]
 						v = a[2]
 						i = 0
@@ -365,20 +337,10 @@ def lex(content):
 		if bName is not None:
 			if bName in line:
 				a = line.strip().split(" ")
-				#print("a - 1 = "+str(a))
-				#print("a[0] = "+a[0])
 				if a[0] == 'bool':
-					#print("Found ya")
 					pass
 				else:
-					#print("Yes")
-					#print("a - 2 = "+str(a))
-					#print("Test 1:2 "+str(vName)+" == "+a[0])
-					#print("Test 2:2 "+str("=")+" == "+a[1])
 					if a[0] == bName and a[1] == '=':
-						#print("Var toggled")
-						#print("Found iName")
-						#print("a - 3 = "+str(a))
 						n = a[0]
 						v = a[2]
 						i = 0
@@ -397,6 +359,41 @@ def lex(content):
 						tokens['ignored'].append(b)
 					else:
 						pass
-		
+		if 'if' in line:
+			print("Found if Statment")
+			a = line.strip().split(" ")
+			try:
+				b = a[4]
+			except IndexError:
+				print("Systematic Error: Forgot 'do' near 'if'")
+				exit()
+			if b == 'do':
+				ob = a[1]
+				if vName is not None:
+					if ob in vName:
+						print("A")
+						o = a[2]
+						if o == "==":
+							print("A-1")
+							vx = Systematic.vIndex(ob,tokens['var']['name'])
+							x = None
+							for xv in vx:
+								x = xv
+							xy = Systematic.gValue(x,tokens['var']['value'])
+							y = None
+							for yx in xy:
+								y = yx
+							v = a[3]
+				if iName is not None:
+					if ob in iName:
+						print("B")
+						o = a[2]
+						v = a[3]
+				if bName is not None:
+					if ob in bName:
+						print("C")
+						o = a[2]
+						v = a[3]
+
 	print(tokens)
 	return tokens
