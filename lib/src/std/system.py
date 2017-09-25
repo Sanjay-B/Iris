@@ -95,4 +95,4 @@ class Systematic:
     def gValue(index,table):
         d = table[index]
         yield d
-        del 
+        del d
