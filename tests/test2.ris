@@ -1,8 +1,0 @@
-/ I am ignored
-/ Quite tragic
-var a = "Sanjay"
-var b = "Rajan"
-int c = 2
-int d = 4
-bool e = false
-bool f = true
