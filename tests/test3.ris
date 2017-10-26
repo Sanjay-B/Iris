@@ -1,0 +1,13 @@
+/ As of 9-23-2017
+
+/ var a = "Sanjay"
+var b
+b = "Rajan"
+
+int c = 0
+int d
+d = 8
+
+bool e = false
+bool f
+f = true
