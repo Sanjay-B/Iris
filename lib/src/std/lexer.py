@@ -36,7 +36,6 @@ tokens = {
 	"var": {"name":[],"value":[]},
 	"int": {"name":[],"value":[]},
 	"bool": {"name":[],"value":[]},
-	"if_statement": {"syn":[],"value":[]},
 	"ignored": []
 }
 
@@ -360,40 +359,71 @@ def lex(content):
 					else:
 						pass
 		if 'if' in line:
-			print("Found if Statment")
+			#print("Found if Statment")
 			a = line.strip().split(" ")
-			try:
-				b = a[4]
-			except IndexError:
-				print("Systematic Error: Forgot 'do' near 'if'")
+			#print(a)
+			if a[2] == "==":
+				if a[4] == "do":
+					x = a[1]
+					y = a[3]
+					is_var = False
+					is_int = False
+					is_bool = False
+					passed = None
+					if x in tokens['var']['name']:
+						is_var = True
+					elif x in tokens['int']['name']:
+						is_int = True
+					elif x in tokens['bool']['name']:
+						is_bool = True
+
+					#print(is_var,is_int,is_bool)
+					obj_value = None
+					if is_var == True:
+						is_var = None
+						is_int = None
+						is_bool = None
+						if x in tokens['var']['name']:
+							i = tokens['var']['name'].index(x)
+							obj_value = tokens['var']['value'][i]
+
+						if obj_value == y:
+							passed = True
+							#print("If statement passed")
+						else:
+							pass
+					elif is_int == True:
+						is_var = None
+						is_int = None
+						is_bool = None
+						if x in tokens['int']['name']:
+							i = tokens['int']['name'].index(x)
+							obj_value = tokens['int']['value'][i]
+
+						if obj_value == y:
+							passed = True
+							#print("If statement passed")
+						else:
+							pass
+					elif is_bool == True:
+						is_var = None
+						is_int = None
+						is_bool = None
+						if x in tokens['bool']['name']:
+							i = tokens['bool']['name'].index(x)
+							obj_value = tokens['bool']['value'][i]
+
+						if obj_value == y:
+							passed = True
+							#print("If statement passed")
+						else:
+							pass
+				else:
+					print("Systematic Error: Missing 'do' at if statement")
+					exit()
+			else:
+				print("Logical Error: Unknown operator-type '"+a[2]+"'")
 				exit()
-			if b == 'do':
-				ob = a[1]
-				if vName is not None:
-					if ob in vName:
-						print("A")
-						o = a[2]
-						if o == "==":
-							print("A-1")
-							vx = Systematic.vIndex(ob,tokens['var']['name'])
-							x = None
-							for xv in vx:
-								x = xv
-							xy = Systematic.gValue(x,tokens['var']['value'])
-							y = None
-							for yx in xy:
-								y = yx
-							v = a[3]
-				if iName is not None:
-					if ob in iName:
-						print("B")
-						o = a[2]
-						v = a[3]
-				if bName is not None:
-					if ob in bName:
-						print("C")
-						o = a[2]
-						v = a[3]
 
 	print(tokens)
 	return tokens
