@@ -1,29 +1,41 @@
+# -*- coding: utf-8 -*-
+#
+#  parser.py
+#  Iris
+#
+#  By Sanjay-B(Sanjay Bhadra)
+#  Copyright © 2017 Sage Technologies LLC. All rights reserved.
+#
+
+"""
+The MIT License (MIT)
+
+Copyright © 2017 Sage Technologies LLC. All rights reserved.
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, modify, merge, publish and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+"""
+
 from .system import *
-'''
-Process:
 
-- - 1). Initialize Variables [ ]
- |
-  - 2). Initialize Integers [ ]
-'''
+global_methods = {'print'}
 
-# python C:\Users\1100276714\Desktop\coding\lang\lib\src\runtime.py C:\Users\1100276714\Desktop\coding\lang\tests\test1.ris
 
 def parse(tokens):
-	i = 0
-	while(i < len(tokens)):
-
-		if tokens['ignored']:
-			#print("Found Ignored")
-			i += 1
-			pass
-
-		if tokens['var']['name']:
-			#pring("Found Var")
-			i += 2
-
-		if tokens['int']['name']:
-			#print("Found Int")
-			i += 3
-
-
+	for m in global_methods:
+		for n in tokens['parse']:
+			if m == n:
+				System._run(m,tokens['parse'][m][0:])
