@@ -7,6 +7,9 @@
 __Core Developers__
 - Sanjay-B(Sanjay Bhadra)
 
+__Resources__
+- [Documentation](https://github.com/Sanjay-B/Iris/blob/legacy/documentation/docs.txt)
+
 
 
 *Copyright 2017 Sage Technologies LLC. All Rights Reserved.*
