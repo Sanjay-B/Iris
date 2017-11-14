@@ -31,11 +31,18 @@ DEALINGS IN THE SOFTWARE.
 
 from .system import *
 
-global_methods = {'print'}
+std_method = ["print"]
 
+def rogue(content):
+	for y in std_method:
+		for yy in content['misc']:
+			if y == yy:
+				content['parse'] = {yy:content['misc'][yy]}
 
 def parse(tokens):
-	for m in global_methods:
+	rogue(tokens)
+	#print(tokens)
+	for m in std_method:
 		for n in tokens['parse']:
 			if m == n:
 				System._run(m,tokens['parse'][m][0:])
