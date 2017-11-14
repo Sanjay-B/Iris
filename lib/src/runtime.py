@@ -4,9 +4,8 @@ from std.lexer import *
 
 
 def process():
-	#raw = open_f(argv[1])
 	data = lex(argv[1])
-	#parse(data)
+	parse(data)
 
 
 
