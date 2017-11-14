@@ -36,52 +36,16 @@ tokens = {
 	"var": {"name":[],"value":[]},
 	"int": {"name":[],"value":[]},
 	"bool": {"name":[],"value":[]},
-	"ignored": []
+	"ignored": [],
+	"parse":{}
 }
-
-'''
-Grammer:
-
-- Variables(var)
-	- To define a variable: 
-		var name = value
-	- To call a variable:
-		name or maybe var.name
-	- Rules:
-		- Can only handle string values
-		- Its implied that a variable will always be a string
-		- "var" must be in all lowercase, zero exception
-
-- Integers(int)
-	- To define an integer:
-		int name = value
-	- To call an integer:
-		name or maybe int.name
-
-- Boolean(bool)
-	- To define a boolean:
-		bool name = true or bool name = false
-	- To call an integer:
-		name or maybe bool.name
-
-- Ignored(/)
-	- To render a comment, a single "/" is placed in front of the word
-	- Must have a space after the "/". 
-		- Correct: / Comment
-		- Wrong: /Comment
-	- Comments are ignored by the lexer and parser respectively
-
-- To replace an int, bool or var
-	- name = new_value
-
-- If Statments(if type-object [operators] do)
-	- 
-
-'''
 
 def lex(content):
 	contents = open(content, "r")
 	lines = contents.readlines()
+	passed = False
+	if_state = False
+	else_state = False
 	for line in lines:
 		if '/' in line:
 			#print("Found Comment")
@@ -245,7 +209,7 @@ def lex(content):
 					n = a[1]
 					#v = a[2]
 					if n in tokens['bool']['name']:
-						print("Systematic Error: Cannot create integer object '"+n+"' more than once.")
+						print("Systematic Error: Cannot create boolean object '"+n+"' more than once.")
 						exit()
 					else:
 						tokens['bool']['name'].append(n)
@@ -253,7 +217,7 @@ def lex(content):
 				else:
 					n = a[1]
 					if n in tokens['bool']['name']:
-						print("Systematic Error: Cannot create variable object '"+n+"' more than once.")
+						print("Systematic Error: Cannot create boolean object '"+n+"' more than once.")
 					else:
 						#print("B")
 						tokens['bool']['name'].append(n)
@@ -268,7 +232,7 @@ def lex(content):
 					tokens['bool']['name'].append(n)
 					tokens['bool']['value'].append(v)
 				else:
-					print("Syntax Error: Attemped to create bool object '"+n+"'. Value must be boolean type.")
+					print("Syntax Error: Attemped to create boolean object '"+n+"'. Value must be boolean type.")
 					exit()
 		#time.sleep(2)
 		v_Name = Systematic.vList(tokens['var']['name'])
@@ -361,6 +325,7 @@ def lex(content):
 		if 'if' in line:
 			#print("Found if Statment")
 			a = line.strip().split(" ")
+			if_state = True
 			#print(a)
 			if a[2] == "==":
 				if a[4] == "do":
@@ -369,7 +334,6 @@ def lex(content):
 					is_var = False
 					is_int = False
 					is_bool = False
-					passed = None
 					if x in tokens['var']['name']:
 						is_var = True
 					elif x in tokens['int']['name']:
@@ -389,9 +353,10 @@ def lex(content):
 
 						if obj_value == y:
 							passed = True
-							#print("If statement passed")
+							#print("Var // If statement passed")
+							#passed = False
 						else:
-							pass
+							passed = False
 					elif is_int == True:
 						is_var = None
 						is_int = None
@@ -402,9 +367,10 @@ def lex(content):
 
 						if obj_value == y:
 							passed = True
-							#print("If statement passed")
+							#print("Int // If statement passed")
+							#passed = False
 						else:
-							pass
+							passed = False
 					elif is_bool == True:
 						is_var = None
 						is_int = None
@@ -415,15 +381,54 @@ def lex(content):
 
 						if obj_value == y:
 							passed = True
-							#print("If statement passed")
+							#print("Bool // If statement passed")
+							#passed = False
 						else:
-							pass
+							passed = False
 				else:
 					print("Systematic Error: Missing 'do' at if statement")
 					exit()
 			else:
 				print("Logical Error: Unknown operator-type '"+a[2]+"'")
 				exit()
+		if 'else' in line:
+			if if_state == True and passed == False:
+				#print("Found else")
+				else_state = True
+				if_state = False
+				passed = False
+			elif if_state == True and passed == True:
+				else_state = False
+				if_state = True
+				passed = True
+			else:
+				pass
+				#print("Systematic Error: Unknown 'else' without if statement")
+				#exit()
 
-	print(tokens)
+		# Some sort of way to indentify anything under an if/else-statement
+		#print("if : "+str(if_state))
+		#print("pass : "+str(passed))
+		#print("else : "+str(else_state))
+
+		# No idea how nested if-else statements are going to work..
+		if else_state == False and passed == True and if_state == True and not 'else' in line and not 'if' in line:
+			a = line.strip().split(" ")
+			#print("Contained in 'if-statement' : "+str(a))
+			tokens['parse'] = {a[0]:[a[1]]}
+			if_state = False
+			else_state = False
+			passed = False
+
+		if else_state == True and passed == False and if_state == False and not 'else' in line and not 'if' in line:
+			a = line.strip().split(" ")
+			#print("Contained in 'else-statement' : "+str(a))
+			tokens['parse'] = {a[0]:[a[1]]}
+			if_state = False
+			else_state = False
+			passed = False
+
+
+
+	#print(tokens)
 	return tokens
