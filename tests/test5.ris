@@ -1,0 +1,10 @@
+// Declares 'a' as <String Sanjay>
+var a = "Sanjay"
+
+// if value of 'a' is equal to the value of <String Sanjay>
+if a == "Sanjay" do
+  // Prints success
+  print "Success"
+else
+  // If not, prints failure
+  print "Failure"
