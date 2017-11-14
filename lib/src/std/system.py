@@ -31,16 +31,25 @@ DEALINGS IN THE SOFTWARE.
 
 from sys import *
 import time 
+from .deps.std.standard.sys import Native
 
 o_stack = []
 n_stack = []
 sym = {}
 
 class System:
+
     def openf(filename):
         data = open(filename, "r").read()
         data += "<EOF>"
         return data
+
+    def _run(name,array):
+        if name == "print":
+            Native._print(array[0])
+        else:
+            print("Failure")
+
 
 class Systematic:
 
