@@ -33,11 +33,12 @@ from .system import System, Systematic
 import time
 
 tokens = {
-	"var": {"name":[],"value":[]},
-	"int": {"name":[],"value":[]},
-	"bool": {"name":[],"value":[]},
+	"var": {"name": [],"value": []},
+	"int": {"name": [],"value": []},
+	"bool": {"name": [],"value": []},
 	"ignored": [],
-	"parse":{}
+	"parse": {},
+	"misc": {}
 }
 
 def lex(content):
@@ -428,6 +429,12 @@ def lex(content):
 			else_state = False
 			passed = False
 
+		# Find anything else like methods
+		else:
+			#print("Unruly")
+			a = line.strip().split(" ")
+			#print(a)
+			tokens['misc'] = {a[0]:[a[1]]}
 
 
 	#print(tokens)
