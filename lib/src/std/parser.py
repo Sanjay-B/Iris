@@ -29,19 +29,29 @@ FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 """
 
+"""
+The parser is quite different to what you'd expect in a normal programming language.
+
+"""
+
 from .system import *
 
-std_method = ["print"]
+std_method = ['print']
 
 def rogue(content):
 	for y in std_method:
 		for yy in content['misc']:
 			if y == yy:
-				content['parse'] = {yy:content['misc'][yy]}
+				try:
+					content['parse'][y].append(content['misc'][yy])
+				except KeyError:
+					try:
+						content['parse'][y] = content['misc'][yy]
+					except KeyError:
+						print("[Iris] Bug. Report to Sanjay Bhadra(Sanjay-B)")
 
 def parse(tokens):
 	rogue(tokens)
-	#print(tokens)
 	for m in std_method:
 		for n in tokens['parse']:
 			if m == n:
