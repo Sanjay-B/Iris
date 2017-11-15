@@ -429,12 +429,19 @@ def lex(content):
 			else_state = False
 			passed = False
 
-		# Find anything else like methods
+		# Find anything else like methods and such
 		else:
 			#print("Unruly")
 			a = line.strip().split(" ")
 			#print(a)
-			tokens['misc'] = {a[0]:[a[1]]}
+			#print(type(a[1:]))
+			try:
+				if type(a[1:]) == str:
+					tokens['misc'] = {a[0]:str(a[1:])}
+				else:
+					tokens['misc'] = {a[0]:[a[1:]]}
+			except IndexError:
+				pass # Rare exception
 
 
 	#print(tokens)
