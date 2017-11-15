@@ -7,7 +7,7 @@
 __Core Developers__
 - Sanjay-B(Sanjay Bhadra)
 - Jeamz(James Avery)
-- Prajwal Vedula(Pragy)
+- Prajy (Prajwal Vedula)
 
 __Resources__
 - [Documentation](https://github.com/Sanjay-B/Iris/blob/legacy/documentation/docs.txt)
