@@ -30,21 +30,30 @@ DEALINGS IN THE SOFTWARE.
 """
 
 __author__ = "Sanjay-B(Sanjay Bhadra)"
-#__version__ = 1.0.0
 
 '''
-The Standard Library is core methods and diction that Iris comes with natively.
+The Standard Library is core methods and diction that Iris comes with natively
+that doesn't require the load of modules. All methods contained within this
+file are considered global classes/methods. 
 '''
 
 class Native:
 
 	def _print(obj):
 		if obj:
-			if type(obj) == str:
-				obje = obj.replace('"', '')
-				return print(obje)
-			else:
-				return print(str(obj))
+			for ss in obj:
+				if type(ss) == str:
+					sss = ss.replace('"', '')
+					print(sss)
+				elif type(ss) == list:
+					for dd in ss:
+						for ddd in dd:
+							dddd = ddd.replace('"', '')
+							print(dddd)
+				elif type(ss) == int:
+					print(str(ss))
+				else:
+					print(str(ss))
 		else:
 			print("Error: No required 1st parameter for print <object>")
 			exit()
