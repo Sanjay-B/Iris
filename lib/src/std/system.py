@@ -46,7 +46,7 @@ class System:
 
     def _run(name,array):
         if name == "print":
-            Native._print(array[0])
+            Native._print(array[0:])
         else:
             print("Failure")
 
@@ -89,10 +89,6 @@ class Systematic:
     def _loop(_array):
         for item in _array:
             return item
-
-    def _print(_obj):
-        a = str(_obj)
-        print(a)
 
     def vIndex(name,table):
         i = 0
