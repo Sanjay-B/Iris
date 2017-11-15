@@ -1,0 +1,4 @@
+// Class-Methods are now possible
+// print <object-type> example which is from the Standard Library
+
+print "Hello, world"
