@@ -1,0 +1,15 @@
+// Not yet implemented. In consideration tho.
+
+var a = "sage"
+bool b = false
+
+define checkVar -> somestringhere : @ 
+    if a == somestringhere  do
+        b = true
+
+// Requires no params for method
+define myMethod : ()
+    if @ checkVar => "sage" == true do
+        print => "hello"
+    else
+        print => "bye"
