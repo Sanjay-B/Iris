@@ -13,3 +13,14 @@ define myMethod : ()
         print => "hello"
     else
         print => "bye"
+
+// Change to below as of 11/16/17
+
+define doubleResult -> [ number ] : @
+	return number*2
+
+define printResult -> [ number ] : ()
+	print => [ number ]
+
+
+printResult => [ @ doubleResult => [ 2 ] ]
