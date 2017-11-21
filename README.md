@@ -6,7 +6,6 @@
 
 __Core Developers__
 - Sanjay-B(Sanjay Bhadra)
-- Jeamz(James Avery)
 - Prajy (Prajwal Vedula)
 
 __Resources__
