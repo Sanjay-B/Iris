@@ -62,8 +62,14 @@ def lex(content):
 	num_call_methods = 0
 	num_call_events = 0
 	line_number = 0
+
+	# Reserved words
 	def_keywords = ['/','//','var','int','bool','if','else','define']
+
+	# Should figure this out soon tbh
+	global std_method
 	std_method = ['print']
+
 	parameters = None
 	def_placeholder = []
 	for line in lines:
@@ -457,17 +463,27 @@ def lex(content):
 		# No idea how nested if-else statements are going to work..
 		if else_state == False and passed == True and if_state == True and not 'else' in line and not 'if' in line and method_state == False:
 			a = line.strip().split(" ")
-			tokens['parse'] = {a[0]:[a[1]]}
-			if_state = False
-			else_state = False
-			passed = False
+			if type(a) == list:
+				for b in a:
+					if b == '' or b == "":
+						pass
+			else:
+				tokens['parse'] = {a[0]:[a[1]]}
+				if_state = False
+				else_state = False
+				passed = False
 
 		if else_state == True and passed == False and if_state == False and not 'else' in line and not 'if' in line and method_state == False:
 			a = line.strip().split(" ")
-			tokens['parse'] = {a[0]:[a[1]]}
-			if_state = False
-			else_state = False
-			passed = False
+			if type(a) == list:
+				for b in a:
+					if b == '' or b == "":
+						pass
+			else:
+				tokens['parse'] = {a[0]:[a[1]]}
+				if_state = False
+				else_state = False
+				passed = False
 
 		if 'define' in line:
 			a = line.strip().split(" ")
@@ -538,6 +554,18 @@ def lex(content):
 					print("Systematic Error: Missing '->' at method-class '"+method_name+"' Line: "+str(line_number))
 					exit()
 
+		if 'end' in line:
+			a = line.strip().split(" ")
+			if a[0] == "end":
+				if len(a) == 1:
+					if method_state == True:
+						method_state = False
+					else:
+						print("Systematic Error: 'end' missing parent 'define' structure Line: "+str(line_number))
+				else:
+					print("Wrong 2")
+			else:
+				print("Wrong 1")
 		# Sneaky little spaces
 		if " " in line:
 			if detected_space_below == True:
@@ -651,5 +679,9 @@ def lex(content):
 	#print("Detected_space_below : "+str(detected_space_below))
 	#print("Method called : "+str(method_called))
 	#print("--")
-	#print(tokens)
+	print(tokens)
 	return tokens
+
+
+#python C:\Users\1100276714\Desktop\Iris-legacy\lib\src\runtime.py C:\Users\1100276714\Desktop\Iris-legacy\tests\test6.ris
+#python C:\Users\sanja\Desktop\Iris-legacy\lib\src\runtime.py C:\Users\sanja\Desktop\Iris-legacy\tests\test6.ris
