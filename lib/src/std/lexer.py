@@ -31,16 +31,7 @@ DEALINGS IN THE SOFTWARE.
 
 from .system import System, Systematic
 import time
-
-tokens = {
-	"var": {"name": [],"value": []},
-	"int": {"name": [],"value": []},
-	"bool": {"name": [],"value": []},
-	"ignored": [],
-	"parse": {},
-	"misc": {},
-	"main_thread": []
-}
+from iris import *
 
 def lex(content):
 	contents = open(content, "r")
@@ -62,19 +53,11 @@ def lex(content):
 	num_call_methods = 0
 	num_call_events = 0
 	line_number = 0
-
-	# Reserved words
-	def_keywords = ['/','//','var','int','bool','if','else','define']
-
-	# Should figure this out soon tbh
-	global std_method
-	std_method = ['print']
-
 	parameters = None
 	def_placeholder = []
+
 	for line in lines:
 		line_number = line_number + 1
-		#print("Line Number : "+str(line_number))
 		if '/' in line:
 			a = line.strip().split(" ")
 			c = ' '.join(a[0:])
@@ -82,31 +65,44 @@ def lex(content):
 		if 'var' in line:
 			a = line.strip().split(" ")
 			if not a[0] == '/' and a[1] == 'var':
-				n = a[1]
-				v = a[3:]
-				if type(v) is not str:
-					print("Systematic Error: Var-type '"+n+"' must be a string. Line: "+str(line_number))
-					exit()
-
-				# Limit Var duplication-based errors
-				if n in tokens['var']['name']:
-					print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
+				if disallowed_keywords in a[1]:
+					print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
 					exit()
 				else:
-					tokens['var']['name'].append(n)
-					tokens['var']['value'].append(v)
+					n = a[1]
+					v = a[3:]
+
+					# Limit Var duplication-based errors
+					if n in tokens['var']['name']:
+						print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
+						exit()
+					else:
+						if Internal.checkString(q,line_number)[0] == True:
+							tokens['var']['name'].append(n)
+							tokens['var']['value'].append(Internal.checkString(v,line_number)[1])
+						else:
+							print("Logical Error: Improper or malformed String-type object Line: "+str(line_number))
+							exit()
 			elif not a[0] == 'rep' and a[1] == 'var' and not a[0] == '/':
 				if a[2] in tokens['var']['name']:
 					print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
 					exit()
 				else:
-					x = a[2]
-					q = a[4]
-					if type(q) is not str:
-						print("Systematic Error: Var-type '"+n+"' must be a string. Line: "+str(line_number))
+					if disallowed_keywords in a[2]:
+						print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
 						exit()
-					tokens['var']['name'].append(x)
-					tokens['var']['value'].append(q)
+					else:
+						x = a[2]
+						q = a[4:]
+						if type(q) is not str:
+							print("Systematic Error: Var-type '"+n+"' must be a string. Line: "+str(line_number))
+							exit()
+						if Internal.checkString(q,line_number)[0] == True:
+							tokens['var']['name'].append(n)
+							tokens['var']['value'].append(Internal.checkString(q,line_number)[1])
+						else:
+							print("Logical Error: Improper or malformed String-type object Line: "+str(line_number))
+							exit()
 			elif a[0] == 'var':
 				try:
 					q = a[2]
@@ -114,28 +110,38 @@ def lex(content):
 					q = None
 				if q == '=':
 					n = a[1]
-					v = a[3]
-					if type(v) is not str:
-						print("Systematic Error: Var-type '"+n+"' must be a string. Line: "+str(line_number))
-						exit()
+					v = a[3:]
 
 					if n in tokens['var']['name']:
 						print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
 						exit()
 					else:
-						tokens['var']['name'].append(n)
-						tokens['var']['value'].append(v)
+						if Internal.checkString(v,line_number)[0] == True:
+							tokens['var']['name'].append(n)
+							tokens['var']['value'].append(Internal.checkString(v,line_number)[1])
+						else:
+							print("Logical Error: Improper or malformed String-type object Line: "+str(line_number))
+							exit()
 				else:
-					n = a[1]
-					if n in tokens['var']['name']:
-						print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
+					if disallowed_keywords in a[1]:
+						print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
+						exit()
 					else:
-						try:
-							_w = type(a[2])
-						except IndexError:
-							_w = None
-						tokens['var']['name'].append(n)
-						tokens['var']['value'].append(_w)
+						n = a[1]
+						if n in tokens['var']['name']:
+							print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
+							exit()
+						else:
+							try:
+								_w = type(a[2:])
+							except IndexError:
+								_w = None
+							if Internal.checkString(q,line_number)[0] == True:
+								tokens['var']['name'].append(n)
+								tokens['var']['value'].append(Internal.checkString(_w,line_number)[1])
+							else:
+								print("Logical Error: Improper or malformed String-type object Line: "+str(line_number))
+								exit()
 			elif a[0] == '/' and a[1] == 'var':
 				pass
 
@@ -164,38 +170,39 @@ def lex(content):
 				except IndexError:
 					q = None
 				if q == '=':
-					n = a[1]
-					try:
-						y = int(a[3])
-					except ValueError:
-						print("Systematic Error: Int-type '"+n+"' must be an integer. Line: "+str(line_number))
-						exit()
-					if type(y) is not int:
-						print("Systematic Error: Int-type '"+n+"' must be an integer. Line: "+str(line_number))
-						exit()
-					if n in tokens['int']['name']:
-						print("Systematic Error: Cannot create integer object '"+n+"' more than once. Line: "+str(line_number))
+					if disallowed_keywords in a:
+						print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
 						exit()
 					else:
-						tokens['int']['name'].append(n)
-						tokens['int']['value'].append(y)
-				else:
-					n = a[1]
-					_z = None
-					if n in tokens['int']['name']:
-						print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
-						exit()
-					else:
-						if type(_z) == str:
-							tokens['int']['name'].append(n)
-							tokens['int']['value'].append(int(_z))
+						n = a[1]
+						y = eval(a[3])
+						if n in tokens['int']['name']:
+							print("Systematic Error: Cannot create integer object '"+n+"' more than once. Line: "+str(line_number))
+							exit()
 						else:
-							try:
-								_z = a[3]
-							except IndexError:
-								_z = None
 							tokens['int']['name'].append(n)
-							tokens['int']['value'].append(_z)
+							tokens['int']['value'].append(y)
+				else:
+					if disallowed_keywords in a:
+						print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
+						exit()
+					else:
+						n = a[1]
+						_z = None
+						if n in tokens['int']['name']:
+							print("Systematic Error: Cannot create variable object '"+n+"' more than once. Line: "+str(line_number))
+							exit()
+						else:
+							if type(_z) == str:
+								tokens['int']['name'].append(n)
+								tokens['int']['value'].append(eval(int(_z)))
+							else:
+								try:
+									_z = a[3]
+								except IndexError:
+									_z = None
+								tokens['int']['name'].append(n)
+								tokens['int']['value'].append(eval(int(_z)))
 			else:
 				pass
 		if 'bool' in line:
@@ -212,20 +219,36 @@ def lex(content):
 				except IndexError:
 					q = None
 				if q == '=':
-					n = a[1]
-					if n in tokens['bool']['name']:
-						print("Systematic Error: Cannot create boolean object '"+n+"' more than once. Line: "+str(line_number))
+					if disallowed_keywords in a:
+						print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
 						exit()
 					else:
-						tokens['bool']['name'].append(n)
-						tokens['bool']['value'].append(a[3])
+						n = a[1]
+						if n in tokens['bool']['name']:
+							print("Systematic Error: Cannot create boolean object '"+n+"' more than once. Line: "+str(line_number))
+							exit()
+						else:
+							if a[3] == "true" or a[3] == "false" or a[3] == "none":
+								print("Syntax Error: '"+a[3]+"' should have it's first letter uppercased Line: "+str(line_number))
+								exit()
+							tokens['bool']['name'].append(n)
+							tokens['bool']['value'].append(eval(a[3]))
 				else:
-					n = a[1]
-					if n in tokens['bool']['name']:
-						print("Systematic Error: Cannot create boolean object '"+n+"' more than once. Line: "+str(line_number))
+					if disallowed_keywords in a:
+						print("Systematic Error: '"+str(a[1])+"' is a reserved word Line: "+str(line_number))
+						exit()
 					else:
-						tokens['bool']['name'].append(n)
-						tokens['bool']['value'].append(q)
+						n = a[1]
+						if n in tokens['bool']['name']:
+							print("Systematic Error: Cannot create boolean object '"+n+"' more than once. Line: "+str(line_number))
+							exit()
+						else:
+							if a[3] == "true" or a[3] == "false" or a[3] == "none":
+								print("Syntax Error: '"+a[3]+"' should have it's first letter uppercased Line: "+str(line_number))
+								exit()
+							else:
+								tokens['bool']['name'].append(n)
+								tokens['bool']['value'].append(eval(q))
 			else:
 				if v == "false":
 					v = False
@@ -233,6 +256,10 @@ def lex(content):
 					tokens['bool']['value'].append(v)
 				elif v == "true":
 					v = True
+					tokens['bool']['name'].append(n)
+					tokens['bool']['value'].append(v)
+				elif v == "none":
+					v = None
 					tokens['bool']['name'].append(n)
 					tokens['bool']['value'].append(v)
 				else:
@@ -343,8 +370,6 @@ def lex(content):
 							is_int = True
 						elif x in tokens['bool']['name']:
 							is_bool = True
-
-						#print(is_var,is_int,is_bool)
 						obj_value = None
 						if is_var == True:
 							is_var = None
@@ -389,7 +414,6 @@ def lex(content):
 					print("Logical Error: Unknown operator-type '"+a[2]+"' Line: "+str(line_number))
 					exit()
 			elif method_state == True:
-				#print(a)
 				if a[2] == "==":
 					if a[4] == "do":
 						x = a[1]
@@ -403,8 +427,6 @@ def lex(content):
 							is_int = True
 						elif x in tokens['bool']['name']:
 							is_bool = True
-
-						#print(is_var,is_int,is_bool)
 						obj_value = None
 						if is_var == True:
 							is_var = None
@@ -487,18 +509,15 @@ def lex(content):
 
 		if 'define' in line:
 			a = line.strip().split(" ")
-			#print(a)
 			method_name = None
 			method_verified = False
 			event_verified = False
 			method_case = False
 			method_table_found = False
-			disallowed_keywords = ["if","else","do","==","var","int","bool"]
 			if a[0:] in disallowed_keywords:
 				print("Systematic Error: Method construction cannot contain conditionals, <Object-type> assignment or rogue values Line: "+str(line_number))
 				exit()
 			if a[0:] in def_placeholder:
-				print("Found method-type")
 				pass
 			if '//' in a[0:]:
 				pass
@@ -580,7 +599,7 @@ def lex(content):
 			if m in line:
 				#print("Found Method call in '"+str(line)+"'")
 				a = line.strip().split(" ")
-				if a[0] in def_keywords:
+				if a[0] in disallowed_keywords:
 					pass
 				elif a[0] in def_placeholder:
 					if a[1] == "=>":
@@ -598,7 +617,7 @@ def lex(content):
 		for n in std_method:
 			if n in line:
 				a = line.strip().split(" ")
-				if a[0] in def_keywords:
+				if a[0] in disallowed_keywords:
 					pass
 				elif a[0] in std_method:
 					if a[1] == "=>":
@@ -659,7 +678,7 @@ def lex(content):
 						print("Method Bug 3")
 			else:
 				try:
-					if a[0] in def_keywords:
+					if a[0] in disallowed_keywords:
 						pass
 					elif type(a[1:]) == str:
 						tokens['misc'] = {a[0]:str(a[1:])}
@@ -681,7 +700,3 @@ def lex(content):
 	#print("--")
 	print(tokens)
 	return tokens
-
-
-#python C:\Users\1100276714\Desktop\Iris-legacy\lib\src\runtime.py C:\Users\1100276714\Desktop\Iris-legacy\tests\test6.ris
-#python C:\Users\sanja\Desktop\Iris-legacy\lib\src\runtime.py C:\Users\sanja\Desktop\Iris-legacy\tests\test6.ris
