@@ -1,0 +1,19 @@
+str a = "Sanjay"
+str b = "Bob is now named Billy"
+str c = "Hello"
+
+
+int num = 12*12
+
+bool quando = True
+bool yo = False
+bool yadda = True
+
+define myMethod -> [ ] : ()
+    if c == "Helo" do
+    	call print("Hi")
+    else
+        call print("Bye")
+end
+
+call myMethod()
