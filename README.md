@@ -1,16 +1,9 @@
 # Iris
 
-**DO NOT PUSH TO MASTER UNLESS TOLD SO.**
+A toy language built without normal regex. It's slightly functional. 
 
 **UNSTABLE and not production ready**
 
-__Core Developers__
-- Sanjay-B(Sanjay Bhadra)
+Developed by: Sanjay-B(Sanjay Bhadra)
 
-__Resources__
-- [Documentation](https://github.com/Sanjay-B/Iris/blob/legacy/documentation/docs.txt)
-
-
-
-*Copyright 2017- Sage Technologies LLC and/or CrowdFlare LLC. All Rights Reserved.*
-*Stolen, attempting to steal or the manipulation of this software will result in legal action. Strictly prohibited.*
+[Documentation](https://github.com/Sanjay-B/Iris/blob/legacy/documentation/docs.txt)
