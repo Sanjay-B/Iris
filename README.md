@@ -2,8 +2,8 @@
 
 A toy language built without normal regex. It's slightly functional. 
 
-Developed by: Sanjay-B(Sanjay Bhadra)
-
 Codebase is a mess. More-so a proof of concept to learn more about language design. 
 
-[Documentation](https://github.com/Sanjay-B/Iris/blob/legacy/documentation/docs.txt)
+If you're curious about the Iris's syntax, you can find the reference [here](https://github.com/Sanjay-B/Iris/blob/legacy/documentation/docs.md).
+
+Developed by: Sanjay-B(Sanjay Bhadra)
