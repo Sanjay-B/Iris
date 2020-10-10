@@ -1,6 +1,6 @@
 # Iris
 
-A toy language built without normal regex. It's slightly functional. 
+A toy language built without regex. It's slightly functional. Looking back, should've stuck with regex. 
 
 Codebase is a mess. More-so a proof of concept to learn more about language design. 
 
